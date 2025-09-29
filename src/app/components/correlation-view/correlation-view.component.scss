@@ -1,0 +1,159 @@
+.correlation-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-actions {
+  margin-bottom: 20px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.summary-card {
+  margin-bottom: 30px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.summary-item {
+  display: flex;
+  gap: 8px;
+
+  .label {
+    font-weight: 500;
+    color: #666;
+  }
+
+  .value {
+    color: #333;
+  }
+
+  .error-badge {
+    color: #f44336;
+    font-weight: bold;
+  }
+}
+
+.summary-message {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.timeline {
+  h2 {
+    font-size: 20px;
+    margin-bottom: 24px;
+    color: #333;
+  }
+}
+
+.timeline-items {
+  position: relative;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+  cursor: pointer;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.timeline-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+
+  .marker-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #2196f3;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px #2196f3;
+    z-index: 1;
+
+    &.layer-frontend {
+      background-color: #9c27b0;
+      box-shadow: 0 0 0 2px #9c27b0;
+    }
+
+    &.layer-backend {
+      background-color: #4caf50;
+      box-shadow: 0 0 0 2px #4caf50;
+    }
+  }
+
+  .marker-line {
+    width: 2px;
+    flex: 1;
+    background-color: #e0e0e0;
+    min-height: 20px;
+  }
+}
+
+.timeline-content {
+  flex: 1;
+
+  mat-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+
+      .separator {
+        color: #999;
+      }
+
+      .component {
+        margin-left: auto;
+        font-size: 14px;
+        font-weight: normal;
+        color: #666;
+      }
+    }
+
+    .log-message {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .log-file {
+      font-size: 12px;
+      color: #666;
+      font-family: 'Courier New', monospace;
+    }
+  }
+}
+
+.error-message {
+  text-align: center;
+  padding: 40px;
+  color: #f44336;
+  font-size: 16px;
+}

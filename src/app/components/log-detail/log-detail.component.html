@@ -1,0 +1,124 @@
+<div class="log-detail-container">
+  <div class="header-actions">
+    <button mat-raised-button (click)="goBack()">← Back to Logs</button>
+    <button mat-raised-button color="primary" *ngIf="log?.correlationId" (click)="viewCorrelation()">
+      View Correlation Chain
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card *ngIf="!loading && log">
+    <mat-card-header>
+      <mat-card-title>
+        <span [class]="getSeverityClass(log.severity)">{{ log.severity }}</span>
+        Log Details
+      </mat-card-title>
+      <mat-card-subtitle>{{ log.timestamp | date:'full' }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="detail-section">
+        <h3>General Information</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="label">ID:</span>
+            <span class="value">{{ log.id }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Environment:</span>
+            <span class="value">{{ log.environment }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Source App:</span>
+            <span class="value">{{ log.sourceApp }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Layer:</span>
+            <span class="value">{{ log.layer }}</span>
+          </div>
+          <div class="detail-item" *ngIf="log.module">
+            <span class="label">Module:</span>
+            <span class="value">{{ log.module }}</span>
+          </div>
+          <div class="detail-item" *ngIf="log.component">
+            <span class="label">Component:</span>
+            <span class="value">{{ log.component }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3>Message</h3>
+        <div class="message-box">{{ log.message }}</div>
+      </div>
+
+      <div class="detail-section" *ngIf="log.stackTrace">
+        <h3>Stack Trace</h3>
+        <pre class="code-block">{{ log.stackTrace }}</pre>
+      </div>
+
+      <div class="detail-section" *ngIf="log.filePath">
+        <h3>File Location</h3>
+        <div class="file-info">
+          <span class="file-path">{{ log.filePath }}</span>
+          <span *ngIf="log.lineNumber" class="line-number">Line {{ log.lineNumber }}</span>
+        </div>
+        <div *ngIf="log.methodName" class="method-name">Method: {{ log.methodName }}</div>
+      </div>
+
+      <div class="detail-section" *ngIf="log.requestPath">
+        <h3>HTTP Request</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="label">Method:</span>
+            <span class="value">{{ log.httpMethod }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Path:</span>
+            <span class="value">{{ log.requestPath }}</span>
+          </div>
+          <div class="detail-item" *ngIf="log.statusCode">
+            <span class="label">Status Code:</span>
+            <span class="value">{{ log.statusCode }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section" *ngIf="log.userId || log.sessionId">
+        <h3>User Context</h3>
+        <div class="detail-grid">
+          <div class="detail-item" *ngIf="log.userId">
+            <span class="label">User ID:</span>
+            <span class="value">{{ log.userId }}</span>
+          </div>
+          <div class="detail-item" *ngIf="log.sessionId">
+            <span class="label">Session ID:</span>
+            <span class="value">{{ log.sessionId }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section" *ngIf="log.correlationId">
+        <h3>Correlation</h3>
+        <div class="correlation-id">
+          {{ log.correlationId }}
+          <button mat-stroked-button color="primary" (click)="viewCorrelation()">
+            View Related Logs
+          </button>
+        </div>
+      </div>
+
+      <div class="detail-section" *ngIf="log.additionalData">
+        <h3>Additional Data</h3>
+        <pre class="code-block">{{ log.additionalData }}</pre>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <p *ngIf="!loading && !log" class="error-message">
+    Log not found.
+  </p>
+</div>

@@ -1,0 +1,87 @@
+<div class="log-list-container">
+  <h1>Log Explorer</h1>
+
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <div class="filter-row">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search</mat-label>
+          <input matInput [(ngModel)]="filter.searchText" (keyup.enter)="searchLogs()" placeholder="Search logs...">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Environment</mat-label>
+          <mat-select [(ngModel)]="filter.environments" multiple>
+            <mat-option *ngFor="let env of environments" [value]="env">{{ env }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Layer</mat-label>
+          <mat-select [(ngModel)]="filter.layers" multiple>
+            <mat-option *ngFor="let layer of layers" [value]="layer">{{ layer }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Severity</mat-label>
+          <mat-select [(ngModel)]="filter.severities" multiple>
+            <mat-option *ngFor="let severity of severities" [value]="severity">{{ severity }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="filter-actions">
+        <button mat-raised-button color="primary" (click)="searchLogs()">Search</button>
+        <button mat-button (click)="resetFilters()">Reset</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="loading" class="loading">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="searchLogs()">Retry</button>
+  </div>
+
+  <div *ngIf="!loading && !error" class="logs-list">
+    <mat-card *ngFor="let log of logs" class="log-card" (click)="viewLog(log)">
+      <mat-card-header>
+        <mat-card-title>
+          <span [class]="getSeverityClass(log.severity)">{{ log.severity }}</span>
+          <span class="separator">|</span>
+          <span [class]="getLayerClass(log.layer)">{{ log.layer }}</span>
+          <span class="separator">|</span>
+          <span class="environment">{{ log.environment }}</span>
+          <span *ngIf="log.module" class="module">{{ log.module }}</span>
+        </mat-card-title>
+        <mat-card-subtitle>
+          {{ log.timestamp | date:'medium' }}
+          <span *ngIf="log.correlationId" class="correlation-link" (click)="$event.stopPropagation(); viewCorrelation(log.correlationId)">
+            🔗 Correlation
+          </span>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="log-message">{{ log.message }}</div>
+        <div *ngIf="log.component" class="log-component">Component: {{ log.component }}</div>
+        <div *ngIf="log.filePath" class="log-file">File: {{ log.filePath }}:{{ log.lineNumber }}</div>
+      </mat-card-content>
+    </mat-card>
+
+    <p *ngIf="logs.length === 0" class="no-logs">No logs found. Try adjusting your filters.</p>
+
+    <mat-paginator
+      *ngIf="logs.length > 0"
+      [length]="totalCount"
+      [pageSize]="filter.pageSize"
+      [pageIndex]="filter.pageNumber - 1"
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>

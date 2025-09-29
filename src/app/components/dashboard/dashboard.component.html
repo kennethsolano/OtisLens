@@ -1,0 +1,97 @@
+<div class="dashboard-container">
+  <h1>Dashboard</h1>
+
+  <div *ngIf="loading" class="loading">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadStats()">Retry</button>
+  </div>
+
+  <div *ngIf="!loading && !error && stats" class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-header>
+        <mat-card-title>Total Logs</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stat-value">{{ stats.totalLogs | number }}</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card error-card">
+      <mat-card-header>
+        <mat-card-title>Errors</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stat-value">{{ stats.errorCount | number }}</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card warning-card">
+      <mat-card-header>
+        <mat-card-title>Warnings</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stat-value">{{ stats.warningCount | number }}</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card info-card">
+      <mat-card-header>
+        <mat-card-title>Info</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stat-value">{{ stats.infoCount | number }}</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card frontend-card">
+      <mat-card-header>
+        <mat-card-title>Frontend Logs</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stat-value">{{ stats.frontendCount | number }}</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card backend-card">
+      <mat-card-header>
+        <mat-card-title>Backend Logs</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stat-value">{{ stats.backendCount | number }}</div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!loading && stats" class="details-section">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Top Errors</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <table class="error-table">
+          <thead>
+            <tr>
+              <th>Message</th>
+              <th>Component</th>
+              <th>Count</th>
+              <th>Last Seen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let error of stats.topErrors">
+              <td class="message-cell">{{ error.message }}</td>
+              <td>{{ error.component || '-' }}</td>
+              <td>{{ error.count }}</td>
+              <td>{{ error.lastOccurrence | date:'short' }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p *ngIf="stats.topErrors.length === 0">No errors found</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

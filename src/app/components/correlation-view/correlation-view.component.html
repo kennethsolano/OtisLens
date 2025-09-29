@@ -1,0 +1,94 @@
+<div class="correlation-container">
+  <div class="header-actions">
+    <button mat-raised-button (click)="goBack()">← Back to Logs</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading && correlationGroup">
+    <mat-card class="summary-card">
+      <mat-card-header>
+        <mat-card-title>Correlation Chain</mat-card-title>
+        <mat-card-subtitle>{{ correlationGroup.correlationId }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="label">Environment:</span>
+            <span class="value">{{ correlationGroup.environment }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Source App:</span>
+            <span class="value">{{ correlationGroup.sourceApp }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Total Logs:</span>
+            <span class="value">{{ correlationGroup.logCount }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Frontend:</span>
+            <span class="value layer-frontend">{{ correlationGroup.frontendCount }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Backend:</span>
+            <span class="value layer-backend">{{ correlationGroup.backendCount }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Has Errors:</span>
+            <span [class.error-badge]="correlationGroup.hasError" class="value">
+              {{ correlationGroup.hasError ? 'Yes' : 'No' }}
+            </span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Duration:</span>
+            <span class="value">
+              {{ correlationGroup.firstLogTimestamp | date:'medium' }} → 
+              {{ correlationGroup.lastLogTimestamp | date:'medium' }}
+            </span>
+          </div>
+        </div>
+        <div *ngIf="correlationGroup.summary" class="summary-message">
+          <strong>Summary:</strong> {{ correlationGroup.summary }}
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="timeline">
+      <h2>Log Timeline ({{ correlationGroup.logs.length }} logs)</h2>
+      
+      <div class="timeline-items">
+        <div *ngFor="let log of correlationGroup.logs; let i = index" class="timeline-item" (click)="viewLogDetail(log)">
+          <div class="timeline-marker">
+            <div class="marker-dot" [class]="getLayerClass(log.layer)"></div>
+            <div *ngIf="i < correlationGroup.logs.length - 1" class="marker-line"></div>
+          </div>
+          <div class="timeline-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>
+                  <span [class]="getSeverityClass(log.severity)">{{ log.severity }}</span>
+                  <span class="separator">|</span>
+                  <span [class]="getLayerClass(log.layer)">{{ log.layer }}</span>
+                  <span *ngIf="log.component" class="component">{{ log.component }}</span>
+                </mat-card-title>
+                <mat-card-subtitle>
+                  {{ log.timestamp | date:'medium' }}
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="log-message">{{ log.message }}</div>
+                <div *ngIf="log.filePath" class="log-file">{{ log.filePath }}:{{ log.lineNumber }}</div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p *ngIf="!loading && !correlationGroup" class="error-message">
+    Correlation group not found.
+  </p>
+</div>

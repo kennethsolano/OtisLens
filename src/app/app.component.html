@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+  <span>🔍 {{ title }}</span>
+  <span class="spacer"></span>
+  <button mat-button routerLink="/dashboard" routerLinkActive="active">
+    <mat-icon>dashboard</mat-icon>
+    Dashboard
+  </button>
+  <button mat-button routerLink="/logs" routerLinkActive="active">
+    <mat-icon>list</mat-icon>
+    Logs
+  </button>
+</mat-toolbar>
+
+<div class="content">
+  <router-outlet></router-outlet>
+</div>
